@@ -1,4 +1,4 @@
-import { createResourceAction } from "@/lib/actions/resources";
+import { createResource } from "@/lib/actions/resources";
 import { findSimilarContent } from "@/lib/ai/embedding";
 import { openai } from "@ai-sdk/openai";
 import { convertToCoreMessages, streamText, tool } from "ai";
@@ -26,8 +26,8 @@ export async function POST(req: Request) {
               "the content or resource the user wants to add to the knowledge base",
             ),
         }),
-        execute: async function execute({ content: newContent }) {
-          await createResourceAction({ content: newContent });
+        execute: async function execute({ content }) {
+          await createResource({ content });
           return "Resource successfully created and embedded.";
         },
       }),
