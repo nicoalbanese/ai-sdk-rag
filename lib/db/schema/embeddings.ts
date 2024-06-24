@@ -11,8 +11,8 @@ export const embeddings = pgTable(
     resourceId: varchar("resource_id", { length: 191 }).references(
       () => resources.id,
     ),
-    content: text("content"),
-    embedding: vector("embedding", { dimensions: 1536 }),
+    content: text("content").notNull(),
+    embedding: vector("embedding", { dimensions: 1536 }).notNull(),
   },
   (table) => ({
     embeddingIndex: index("embeddingIndex").using(

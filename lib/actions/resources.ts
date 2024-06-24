@@ -14,6 +14,9 @@ import {
   insertResourceParams,
   updateResourceParams,
 } from "@/lib/db/schema/resources";
+import { generateManyEmbeddings } from "../ai/embedding";
+import { db } from "../db";
+import { embeddings } from "../db/schema/embeddings";
 
 const handleErrors = (e: unknown) => {
   const errMsg = "Error, please try again.";
@@ -30,7 +33,14 @@ const revalidateResources = () => revalidatePath("/resources");
 export const createResourceAction = async (input: NewResourceParams) => {
   try {
     const payload = insertResourceParams.parse(input);
-    await createResource(payload);
+    const contentSmall = payload.content.replace("\n", " ");
+    const { resource } = await createResource(payload);
+
+    const e = await generateManyEmbeddings(contentSmall);
+    await db
+      .insert(embeddings)
+      .values(e.map((embed) => ({ resourceId: resource.id, ...embed })));
+
     revalidateResources();
   } catch (e) {
     return handleErrors(e);
@@ -56,3 +66,4 @@ export const deleteResourceAction = async (input: ResourceId) => {
     return handleErrors(e);
   }
 };
+
