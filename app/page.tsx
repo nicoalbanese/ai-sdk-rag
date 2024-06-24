@@ -8,30 +8,32 @@ export default function Chat() {
   });
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-      {messages.map((m) => (
-        <div key={m.id} className="whitespace-pre-wrap">
-          {m.role === "user" && (
-            <div>
-              <div className="font-bold">{m.role}</div>
-              <p>{m.content}</p>
-            </div>
-          )}
-          {m.role === "assistant" && (
-            <div>
-              <div className="font-bold">{m.role}</div>
-              <p>
-                {m.content.length > 0 ? (
-                  m.content
-                ) : (
-                  <span className="italic font-light">
-                    {"calling tool: " + m?.toolInvocations?.[0].toolName}
-                  </span>
-                )}
-              </p>
-            </div>
-          )}
-        </div>
-      ))}
+      <div className="space-y-4">
+        {messages.map((m) => (
+          <div key={m.id} className="whitespace-pre-wrap">
+            {m.role === "user" && (
+              <div>
+                <div className="font-bold">{m.role}</div>
+                <p>{m.content}</p>
+              </div>
+            )}
+            {m.role === "assistant" && (
+              <div>
+                <div className="font-bold">{m.role}</div>
+                <p>
+                  {m.content.length > 0 ? (
+                    m.content
+                  ) : (
+                    <span className="italic font-light">
+                      {"calling tool: " + m?.toolInvocations?.[0].toolName}
+                    </span>
+                  )}
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
 
       <form onSubmit={handleSubmit}>
         <input
