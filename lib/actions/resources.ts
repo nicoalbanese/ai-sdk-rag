@@ -23,9 +23,9 @@ export const createResource = async (input: NewResourceParams) => {
     await db
       .insert(embeddings)
       .values(e.map((embed) => ({ resourceId: resource.id, ...embed })));
+    return "Resource successfully created and embedded.";
   } catch (e) {
     if (e instanceof Error)
       return e.message.length > 0 ? e.message : "Error, please try again.";
   }
 };
-
