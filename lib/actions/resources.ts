@@ -2,7 +2,7 @@
 
 import {
   NewResourceParams,
-  insertResourceParams,
+  insertResourceSchema,
   resources,
 } from "@/lib/db/schema/resources";
 import { generateManyEmbeddings } from "../ai/embedding";
@@ -11,15 +11,15 @@ import { embeddings } from "../db/schema/embeddings";
 
 export const createResource = async (input: NewResourceParams) => {
   try {
-    const payload = insertResourceParams.parse(input);
+    const payload = insertResourceSchema.parse(input);
 
-    const contentSmall = payload.content.replace("\n", " ");
+    const contentWithoutLineBreaks = payload.content.replace("\n", " ");
     const [resource] = await db
       .insert(resources)
-      .values({ content: contentSmall })
+      .values({ content: contentWithoutLineBreaks })
       .returning();
 
-    const e = await generateManyEmbeddings(contentSmall);
+    const e = await generateManyEmbeddings(contentWithoutLineBreaks);
     await db
       .insert(embeddings)
       .values(e.map((embed) => ({ resourceId: resource.id, ...embed })));

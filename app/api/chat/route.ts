@@ -1,6 +1,5 @@
 import { createResource } from "@/lib/actions/resources";
-import { findSimilarContent } from "@/lib/ai/embedding";
-import { openai } from "@ai-sdk/openai";
+import { findSimilarContent, model } from "@/lib/ai/embedding";
 import { convertToCoreMessages, streamText, tool } from "ai";
 import { z } from "zod";
 
@@ -11,7 +10,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = await streamText({
-    model: openai("gpt-4o"),
+    model,
     messages: convertToCoreMessages(messages),
     system:
       "You are a helpful assistant intended to help solve the users problems using your knowledge base. ONLY use information available in the knowledge base to answer questions. If the knowledge does not exist, respond, Sorry, I don't know. You can use the information you do have to infer an answer.",
